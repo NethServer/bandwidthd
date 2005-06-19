@@ -255,22 +255,29 @@ int main(int argc, char **argv)
 
 	openlog("bandwidthd", LOG_CONS, LOG_DAEMON);
 
-	if (stat("./etc/bandwidthd.conf", &StatBuf))
+	if (stat("/etc/bandwidthd.conf", &StatBuf))
 		{
 		chdir(INSTALL_DIR);
 		if (stat("./etc/bandwidthd.conf", &StatBuf))
 			{
-			printf("Cannot find ./etc/bandwidthd.conf or %s/etc/bandwidthd.conf\n", INSTALL_DIR);
-			syslog(LOG_ERR, "Cannot find ./etc/bandwidthd.conf or %s/etc/bandwidthd.conf", INSTALL_DIR);
+			printf("Cannot find /etc/bandwidthd.conf or %s/etc/bandwidthd.conf\n", INSTALL_DIR);
+			syslog(LOG_ERR, "Cannot find /etc/bandwidthd.conf or %s/etc/bandwidthd.conf", INSTALL_DIR);
 			exit(1);
 			}
+		else
+		        {
+		        bdconfig_in = fopen("./etc/bandwidthd.conf", "rt");
+                        }	
 		}
-
-	bdconfig_in = fopen("./etc/bandwidthd.conf", "rt");
+	else
+	        {
+			bdconfig_in = fopen("/etc/bandwidthd.conf", "rt");
+		}
+		
 	if (!bdconfig_in)
 		{
 		syslog(LOG_ERR, "Cannot open bandwidthd.conf");
-		printf("Cannot open ./etc/bandwidthd.conf\n");
+		printf("Cannot open bandwidthd.conf\n");
 		exit(1);
 		}
 	bdconfig_parse();
@@ -290,6 +297,7 @@ int main(int argc, char **argv)
 		(unsigned long) (0-1), (unsigned long long) (0-1));
 		exit(1);
 	*/
+	chdir(INSTALL_DIR);
 
 	for(Counter = 1; Counter < argc; Counter++)
 		{

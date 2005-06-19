@@ -100,6 +100,7 @@ typedef u_int16_t uint16_t;
 
 #define DB_PGSQL 1
 
+
 struct config
 	{
 	char *dev;

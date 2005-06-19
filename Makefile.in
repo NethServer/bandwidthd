@@ -1,10 +1,13 @@
 exec_prefix = @exec_prefix@
 prefix = @prefix@
+datadir = @datadir@
+sbindir = @sbindir@
+
 CC = @CC@
 LDFLAGS = @LDFLAGS@ @LIBS@
 OBS= bandwidthd.o graph.o conf.tab.o conf.l.o
 
-CFLAGS= -Wall @CFLAGS@ @CPPFLAGS@ @DEFS@ -DINSTALL_DIR="\"$(exec_prefix)/bandwidthd\""
+CFLAGS= -Wall @CFLAGS@ @CPPFLAGS@ @DEFS@ -DINSTALL_DIR="\"$(datadir)/bandwidthd\""
 NONWALLCFLAGS= @CFLAGS@ @CPPFLAGS@ @DEFS@
 
 # Debugging stuff
@@ -38,12 +41,13 @@ real-clean: dist-clean
 	rm -f conf.tab.c conf.tab.h conf.l.c config.h.in configure 
 
 install: all
-	@INSTALL@ -d $(DESTDIR)$(exec_prefix)/bandwidthd/etc
-	@INSTALL@ -d $(DESTDIR)$(exec_prefix)/bandwidthd/htdocs
-	@INSTALL@ -m755 -s bandwidthd $(DESTDIR)$(exec_prefix)/bandwidthd	
-	if [ ! -f $(DESTDIR)$(exec_prefix)/bandwidthd/etc/bandwidthd.conf ] ; then @INSTALL@ -m644 etc/bandwidthd.conf $(DESTDIR)$(exec_prefix)/bandwidthd/etc/ ; fi
-	@INSTALL@ -m644 htdocs/legend.gif $(DESTDIR)$(exec_prefix)/bandwidthd/htdocs
-	@INSTALL@ -m644 htdocs/logo.gif $(DESTDIR)$(exec_prefix)/bandwidthd/htdocs
+	@INSTALL@ -d $(DESTDIR)/etc
+	@INSTALL@ -d $(DESTDIR)$(datadir)/bandwidthd/htdocs
+	@INSTALL@ -d $(DESTDIR)$(sbindir)	
+	@INSTALL@ -m755 bandwidthd $(DESTDIR)$(sbindir)/bandwidthd	
+	if [ ! -f $(DESTDIR)/etc/bandwidthd.conf ] ; then @INSTALL@ -m644 etc/bandwidthd.conf $(DESTDIR)/etc/ ; fi
+	@INSTALL@ -m644 htdocs/legend.gif $(DESTDIR)$(datadir)/bandwidthd/htdocs
+	@INSTALL@ -m644 htdocs/logo.gif $(DESTDIR)$(datadir)/bandwidthd/htdocs
 
 #**** Stuff where -WALL is turned off to reduce the noise in a compile so I can see my own errors *******************
 conf.l.o: conf.l.c
