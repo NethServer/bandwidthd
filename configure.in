@@ -55,8 +55,8 @@ AC_CHECK_LIB(pcap, pcap_open_live, ,
 	[AC_CHECK_LIB(wpcap, pcap_open_live, ,[AC_MSG_ERROR([Bandwidthd requires but cannot find libpcap])])])
 
 # Optional Library
-AC_CHECK_FILE(/usr/local/pgsql/lib, LDFLAGS="$LDFLAGS -L/usr/local/pgsql/lib")
-AC_CHECK_FILE(/usr/local/pgsql/include, CPPFLAGS="$CPPFLAGS -I/usr/local/pgsql/include")
+AC_CHECK_FILE(/usr/lib, LDFLAGS="$LDFLAGS -L/usr/lib")
+AC_CHECK_FILE(/usr/include/pgsql, CPPFLAGS="$CPPFLAGS -I/usr/include/pgsql")
 AC_CHECK_LIB(pq, PQconnectdb,
 	[AC_CHECK_LIB(pq,PQexecParams, ,AC_MSG_WARN([libpq exists but is too old... bandwidthd requires support for PQexecParams]))])
 
