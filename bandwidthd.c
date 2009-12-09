@@ -320,6 +320,11 @@ int main(int argc, char **argv)
 
 #ifdef HAVE_PCAP_FINDALLDEVS
 	pcap_findalldevs(&Devices, Error);
+	if (Devices == NULL)
+		{
+		printf("Can't find network devices: %s", Error);
+		exit(1);
+		}
 	if (config.dev == NULL && Devices->name)
 		config.dev = strdup(Devices->name);
 	if (ListDevices)
