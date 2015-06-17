@@ -194,7 +194,7 @@ void            PacketCallback(u_char *user, const struct pcap_pkthdr *h, const 
 void RecoverDataFromCDF(void);
 
 // ************ This function converts and IP to a char string
-char inline 	*HostIp2CharIp(unsigned long ipaddr, char *buffer);
+__attribute__ ((gnu_inline)) char inline 	*HostIp2CharIp(unsigned long ipaddr, char *buffer);
 
 // ************ This function converts the numbers for each quad into an IP
 inline uint32_t IpAddr(unsigned char q1, unsigned char q2, unsigned char q3, unsigned char q4);

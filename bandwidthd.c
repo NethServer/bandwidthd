@@ -1255,7 +1255,7 @@ inline struct IPData *FindIp(uint32_t ipaddr)
 
 size_t ICGrandTotalDataPoints = 0;
 
-char inline *HostIp2CharIp(unsigned long ipaddr, char *buffer)
+__attribute__ ((gnu_inline)) char inline *HostIp2CharIp(unsigned long ipaddr, char *buffer)
     {
 	struct in_addr in_addr;
 	char *s;
