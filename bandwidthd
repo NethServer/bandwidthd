@@ -1,0 +1,76 @@
+#! /bin/bash
+#
+# bandwidthd
+#
+# chkconfig: - 90 26
+# description: Activates/Deactivates bandwidthd network traffic monitor
+PROGNAME=/usr/sbin/bandwidthd
+
+# Source function library.
+. /etc/init.d/functions
+
+if [ ! -f /etc/sysconfig/network ]; then
+    exit 0
+fi
+
+. /etc/sysconfig/network
+
+if [ -f /etc/sysconfig/bandwidthd ]; then
+    . /etc/sysconfig/bandwidthd
+fi
+
+
+
+# Check that networking is up.
+[ "${NETWORKING}" = "no" ] && exit 0
+
+
+
+# See how we were called.
+case "$1" in
+  start)
+	
+        #Register to dns
+        echo -n $"Starting Bandwidthd network traffic monitor: "
+	daemon $PROGNAME $OPTIONS
+	RETVAL=$?
+	echo
+	
+        [ $RETVAL -eq 0 ] && touch /var/lock/subsys/bandwidthd
+	exit $RETVAL
+        ;;
+
+  stop)
+        echo -n $"Shuting down Bandwidthd network traffic monitor: "
+	killproc `basename $PROGNAME`
+        RETVAL=$?
+	echo
+
+        [ $RETVAL -eq 0 ] && success || failure        
+	echo
+	
+        [ $RETVAL -eq 0 ] && rm -f /var/lock/subsys/bandwidthd
+	exit $RETVAL
+        ;;
+
+  status)
+	status $PROGNAME
+	;;
+
+  condrestart)
+        if [ -f /var/lock/subsys/bandwidthd ]; then
+            $0 stop
+            $0 start
+        fi
+        ;;
+
+  restart|reload)
+	$0 stop
+	$0 start
+	;;
+  *)
+        echo $"Usage: $0 {start|stop|restart|reload|status}"
+        exit 1
+esac
+
+exit 0
