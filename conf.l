@@ -26,6 +26,7 @@ graph					{ return TOKGRAPH; }
 filter					{ return TOKFILTER; }
 meta_refresh			{ return TOKMETAREFRESH; }
 pgsql_connect_string	{ return TOKPGSQLCONNECTSTRING; }
+sqlite_filename         { return TOKSQLITEFILENAME; }
 sensor_id				{ return TOKSENSORID; }
 .						{ return TOKJUNK; }
 %%

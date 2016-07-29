@@ -172,7 +172,7 @@ storing it in a database across the network or on the local host.  In this mode
 Bandwidthd uses very little ram and CPU. In addition, multiple sensors can record 
 to the same database.
 
-2. The database system.  Currently Bandwidthd only supports Postgresql.
+2. The database system.  Currently Bandwidthd only supports Postgresql and SQLite.
 
 3. The webserver and php application.  Bundled with Bandwidthd in the "phphtdocs" 
 directory is a php application that reports on and graphs the contents of the database.  
@@ -205,6 +205,9 @@ Bandwidthd Setup:
 # Standard postgres connect string, just like php, see postgres docs for
 # details
 pgsql_connect_string "user = someuser dbname = mydb host = databaseserver.com"
+# As alternative to the pgsql_connect_string option above, set the SQLite db path:
+# sqlite_filename = "/tmp/bandwidthd.sqlite"
+#
 # Arbitrary sensor name, I recommend the sensors fully qualified domain
 # name
 sensor_id "sensor1.mycompany.com"

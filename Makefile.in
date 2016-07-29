@@ -5,7 +5,7 @@ sbindir = @sbindir@
 
 CC = @CC@
 LDFLAGS = @LDFLAGS@ @LIBS@
-OBS= bandwidthd.o graph.o conf.tab.o conf.l.o
+OBS= bandwidthd.o graph.o sqlite.o conf.tab.o conf.l.o
 
 CFLAGS= -Wall @CFLAGS@ @CPPFLAGS@ @DEFS@ -DINSTALL_DIR="\"$(datadir)/bandwidthd\""
 NONWALLCFLAGS= @CFLAGS@ @CPPFLAGS@ @DEFS@

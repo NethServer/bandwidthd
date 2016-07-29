@@ -34,6 +34,7 @@ int bdconfig_wrap()
 %token TOKJUNK TOKSUBNET TOKDEV TOKSLASH TOKSKIPINTERVALS TOKGRAPHCUTOFF 
 %token TOKPROMISC TOKOUTPUTCDF TOKRECOVERCDF TOKGRAPH TOKNEWLINE TOKFILTER
 %token TOKMETAREFRESH TOKPGSQLCONNECTSTRING TOKSENSORID
+%token TOKSQLITEFILENAME
 %union
 {
     int number;
@@ -75,6 +76,8 @@ command:
 	meta_refresh
 	|
 	pgsql_connect_string
+	|
+	sqlite_filename
 	|
 	sensor_id
 	;
@@ -204,6 +207,14 @@ pgsql_connect_string:
 	config.output_database = DB_PGSQL;
     }
     ;
+
+sqlite_filename:
+   TOKSQLITEFILENAME string
+   {
+   config.db_connect_string = $2;
+   config.output_database = DB_SQLITE;
+   }
+   ;
 
 sensor_id:
     TOKSENSORID string

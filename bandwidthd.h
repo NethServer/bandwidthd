@@ -99,7 +99,7 @@ typedef u_int16_t uint16_t;
 #define PERMIS 1
 
 #define DB_PGSQL 1
-
+#define DB_SQLITE 2
 
 struct config
 	{
@@ -218,3 +218,9 @@ unsigned long long GraphData(gdImagePtr im, gdImagePtr im2, struct IPDataStore *
 // ************ Misc
 inline void     DstCredit(uint32_t ipaddr, unsigned int psize);
 void			MakeIndexPages(int NumGraphs, struct SummaryData *SummaryData[]);
+
+// ************ Pgsql
+void StoreIPDataInPostgresql(struct IPData IncData[]);
+
+// ************ SQLite
+void sqliteStoreIPData(struct IPData IncData[]);

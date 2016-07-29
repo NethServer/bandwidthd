@@ -26,6 +26,7 @@ unsigned int GraphIntervalCount = 0;
 unsigned int IpCount = 0;
 unsigned int SubnetCount = 0;
 time_t IntervalStart;
+time_t ProgramStart;
 int RotateLogs = FALSE;
     
 struct SubnetData SubnetTable[SUBNET_NUM];
@@ -239,6 +240,8 @@ int main(int argc, char **argv)
 	int ForkBackground = TRUE;
 	int ListDevices = FALSE;
 	int Counter;
+
+	ProgramStart = time(NULL);
 
 	config.dev = NULL;
 	config.filter = "ip";
@@ -888,6 +891,8 @@ void StoreIPDataInDatabase(struct IPData IncData[])
 	{
 	if (config.output_database == DB_PGSQL)
 		StoreIPDataInPostgresql(IncData);
+	else if(config.output_database == DB_SQLITE)
+		sqliteStoreIPData(IncData);
 	}
 
 void StoreIPDataInCDF(struct IPData IncData[])
