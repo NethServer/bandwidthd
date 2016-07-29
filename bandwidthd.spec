@@ -3,22 +3,19 @@
 
 Name:           bandwidthd
 Version:        2.0.1
-Release:        31%{?dist}
+Release:        32%{?dist}
 Summary:        Tracks network usage and builds html and graphs
 
 Group:          System Environment/Daemons
 License:        GPL+
 URL:            http://bandwidthd.sourceforge.net/
-Source0:        http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tgz
+Source0:        %{name}-%{version}.tar.gz
 Source1:        %{name}
 Source2:        %{name}.service
-Patch0:         bandwidthd-destdir.patch
-Patch1:         bandwidthd-pgsql.patch
-Patch2:         0001-Gracefuly-exit-upon-pcap_findalldevs-error.patch
-Patch3:         bandwidthd-gcc5.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:  autoconf, gd-devel, libpng-devel
+BuildRequires:  autoconf, gd-devel, libpng-devel, bison, flex
 %{?!_without_pgsql:BuildRequires: postgresql-devel}
+%{?!_without_sqlite:BuildRequires: sqlite-devel}
 %if "0%{?dist}" == "0.el4"
 BuildRequires:  libpcap
 %else
@@ -54,13 +51,10 @@ is graphed on a Celeron 450 every 10 minutes.
 
 %prep
 %setup -q
-%patch0 -p1 -b .dest
-%patch1 -p0 -b .pgsql
-%patch2 -p1 -b .nodevs
-%patch3 -p1 -b .gcc5
 
 %build
-cp -af /usr/lib/rpm/config.{sub,guess} .
+cp -avf /usr/lib/rpm/config.{sub,guess} .
+autoheader
 autoconf
 %configure --prefix=%{_prefix} \
   --exec-prefix=%{_prefix} \
@@ -68,7 +62,6 @@ autoconf
   --bindir=%{_bindir} \
   --datadir=%{_var}/www
 make %{?_smp_mflags}
-
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -119,6 +112,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Jul 28 2016 Davide Principi <davide.principi@nethesis.it> - 2.0.1-32
+- Added sqlite output support from sources on SF CVS bandwidthd repo
+- Build for NethServer
+- Merged patch files into git repository
+
 * Wed Feb 03 2016 Ján ONDREJ (SAL) <ondrejj(at)salstar.sk> - 2.0.1-31
 - Fix bandwidthd.service file permissions and patch URL.
 
