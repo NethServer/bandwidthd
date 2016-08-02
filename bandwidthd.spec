@@ -5,12 +5,12 @@
 
 Name:           bandwidthd
 Version:        2.0.1
-Release:        32%{?dist}
+Release:        33%{?dist}
 Summary:        Tracks network usage and builds html and graphs
 
 Group:          System Environment/Daemons
 License:        GPL+
-URL:            http://bandwidthd.sourceforge.net/
+URL:            http://github.com/NethServer/%{name}
 Source0:        %{name}-%{version}.tar.gz
 Source1:        %{name}
 Source2:        %{name}.service
@@ -115,6 +115,11 @@ rm -rf $RPM_BUILD_ROOT
 %{_datarootdir}/%{name}
 
 %changelog
+* Tue Aug 02 2016 Davide Principi <davide.principi@nethesis.it> - 2.0.1-33
+- Changed default configuration to use SQLite backend
+- Fixed PHP scripts for SQLite and PHP 5.4
+- Compiled without PostgreSQL
+
 * Thu Jul 28 2016 Davide Principi <davide.principi@nethesis.it> - 2.0.1-32
 - Added sqlite output support from sources on SF CVS bandwidthd repo
 - Build for NethServer
