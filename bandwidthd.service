@@ -3,9 +3,7 @@ Description=Bandwidthd Network Traffic Monitor
 After=network.target
 
 [Service]
-Type=forking
-PIDFile=/run/bandwidthd.pid
-ExecStart=/usr/sbin/bandwidthd 
+ExecStart=/usr/sbin/bandwidthd -D
 
 [Install]
 WantedBy=multi-user.target
