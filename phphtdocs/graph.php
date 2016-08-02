@@ -171,7 +171,6 @@ header("Content-type: image/png");
 
 $im = imagecreate($width, $height);
 $white = imagecolorallocate($im, 255, 255, 255);
-$yellow = ImageColorAllocate($im, 255, 255, 0);
 $purple = ImageColorAllocate($im, 255, 0, 255);
 $green  = ImageColorAllocate($im, 0, 255, 0);
 $blue   = ImageColorAllocate($im, 0, 0, 255);
@@ -208,7 +207,6 @@ for($Counter=XOFFSET+1; $Counter < $width; $Counter++)
 
 		// Plot them!
 		//echo "$Counter:".$Counter." (h-y)-t:".($height-YOFFSET) - $total[$Counter]." h-YO-1:".$height-YOFFSET-1;
-        ImageLine($im, $Counter, ($height-YOFFSET) - $total[$Counter], $Counter, $height-YOFFSET-1, $yellow);
         ImageLine($im, $Counter, ($height-YOFFSET) - $icmp[$Counter], $Counter, $height-YOFFSET-1, $red);
         ImageLine($im, $Counter, ($height-YOFFSET) - $udp[$Counter], $Counter, ($height-YOFFSET) - $icmp[$Counter] - 1, $brown);
         ImageLine($im, $Counter, ($height-YOFFSET) - $tcp[$Counter], $Counter, ($height-YOFFSET) - $udp[$Counter] - 1, $green);
