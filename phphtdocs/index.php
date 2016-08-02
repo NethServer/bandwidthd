@@ -121,7 +121,7 @@ $num_rows = count($result);
 if ($limit == "all")
 	$limit = $num_rows;
 
-echo "<table width=100% border=1 cellspacing=0><tr><td>Ip<td>Name<td>Total<td>Sent<td>Received<td>tcp<td>udp<td>icmp<td>http<td>p2p<td>ftp";
+echo "<table width=100% border=1 cellspacing=0><tr><td>Ip<td>Name<td>Total<td>Sent<td>Received<td>tcp<td>udp<td>icmp<td>http<td>smtp<td>ftp";
 
 if (!isset($subnet)) // Set this now for total graphs
 	$subnet = "0.0.0.0/0";

@@ -469,13 +469,12 @@ unsigned long long int GraphData(gdImagePtr im, gdImagePtr im2, struct IPDataSto
     char Buffer[30];
     char Buffer2[50];
     
-    int blue, lblue, red, yellow, purple, green, brown, black;
-    int blue2, lblue2, red2, yellow2, purple2, green2, brown2, black2;
+    int blue, lblue, red, purple, green, brown, black;
+    int blue2, lblue2, red2, purple2, green2, brown2, black2;
 
 	unsigned long long int SentPeak = 0;
 	unsigned long long int ReceivedPeak = 0;
 
-    yellow   = gdImageColorAllocate(im, 255, 255, 0);
     purple   = gdImageColorAllocate(im, 255, 0, 255);
     green    = gdImageColorAllocate(im, 0, 255, 0);
     blue     = gdImageColorAllocate(im, 0, 0, 255);
@@ -484,7 +483,6 @@ unsigned long long int GraphData(gdImagePtr im, gdImagePtr im2, struct IPDataSto
     red      = gdImageColorAllocate(im, 255, 0, 0);
     black 	 = gdImageColorAllocate(im, 0, 0, 0);
     
-    yellow2  = gdImageColorAllocate(im2, 255, 255, 0);
     purple2   = gdImageColorAllocate(im2, 255, 0, 255);
     green2   = gdImageColorAllocate(im2, 0, 255, 0);
     blue2    = gdImageColorAllocate(im2, 0, 0, 255);
@@ -661,7 +659,6 @@ unsigned long long int GraphData(gdImagePtr im, gdImagePtr im2, struct IPDataSto
 
                 // Plot them!
 				// Sent
-                gdImageLine(im, Counter, (YHEIGHT-YOFFSET) - total[Counter], Counter, YHEIGHT-YOFFSET-1, yellow);
                 gdImageLine(im, Counter, (YHEIGHT-YOFFSET) - icmp[Counter], Counter, YHEIGHT-YOFFSET-1, red);
                 gdImageLine(im, Counter, (YHEIGHT-YOFFSET) - udp[Counter], Counter, (YHEIGHT-YOFFSET) - icmp[Counter] - 1, brown);
                 gdImageLine(im, Counter, (YHEIGHT-YOFFSET) - tcp[Counter], Counter, (YHEIGHT-YOFFSET) - udp[Counter] - 1, green);
@@ -670,7 +667,6 @@ unsigned long long int GraphData(gdImagePtr im, gdImagePtr im2, struct IPDataSto
                 gdImageLine(im, Counter, (YHEIGHT-YOFFSET) - ftp[Counter], Counter, (YHEIGHT-YOFFSET) - http[Counter] - 1, lblue);
 								
 				// Receive
-                gdImageLine(im2, Counter, (YHEIGHT-YOFFSET) - total2[Counter], Counter, YHEIGHT-YOFFSET-1, yellow2);
                 gdImageLine(im2, Counter, (YHEIGHT-YOFFSET) - icmp2[Counter], Counter, YHEIGHT-YOFFSET-1, red2);
                 gdImageLine(im2, Counter, (YHEIGHT-YOFFSET) - udp2[Counter], Counter, (YHEIGHT-YOFFSET) - icmp2[Counter] - 1, brown2);
                 gdImageLine(im2, Counter, (YHEIGHT-YOFFSET) - tcp2[Counter], Counter, (YHEIGHT-YOFFSET) - udp2[Counter] - 1, green2);

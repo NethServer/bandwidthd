@@ -557,26 +557,7 @@ inline void Credit(struct Statistics *Stats, const struct ip *ip)
 			if (sport == 20 || dport == 20 || sport == 21 || dport == 21)
 				Stats->ftp += size;
 
-            if (sport == 1044|| dport == 1044||		// Direct File Express
-				sport == 1045|| dport == 1045|| 	// ''  <- Dito Marks
-                sport == 1214|| dport == 1214||		// Grokster, Kaza, Morpheus
-				sport == 4661|| dport == 4661||		// EDonkey 2000
-				sport == 4662|| dport == 4662||     // ''
-				sport == 4665|| dport == 4665||     // ''
-				sport == 5190|| dport == 5190||		// Song Spy
-				sport == 5500|| dport == 5500||		// Hotline Connect
-				sport == 5501|| dport == 5501||		// ''
-				sport == 5502|| dport == 5502||		// ''
-				sport == 5503|| dport == 5503||		// ''
-				sport == 6346|| dport == 6346||		// Gnutella Engine
-				sport == 6347|| dport == 6347||		// ''
-				sport == 6666|| dport == 6666||		// Yoink
-				sport == 6667|| dport == 6667||		// ''
-				sport == 7788|| dport == 7788||		// Budy Share
-				sport == 8888|| dport == 8888||		// AudioGnome, OpenNap, Swaptor
-				sport == 8889|| dport == 8889||		// AudioGnome, OpenNap
-				sport == 28864|| dport == 28864||	// hotComm				
-				sport == 28865|| dport == 28865)	// hotComm
+            if ( sport == 25 || dport == 25 || sport == 465 || dport == 465 || sport == 587 || dport == 587)   // IN and OUT email
                 Stats->p2p += size;
             break;
         case 17:
