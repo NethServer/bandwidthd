@@ -1,5 +1,7 @@
-# You can compile this without postgresql support by running:
-# rpmbuild -ba bandwidthd.spec --without pgsql
+# You can compile this without sqlite support by running:
+# rpmbuild -ba bandwidthd.spec --without sqlite --with pgsql
+%bcond_with pgsql
+%bcond_without sqlite
 
 Name:           bandwidthd
 Version:        2.0.1
@@ -14,8 +16,12 @@ Source1:        %{name}
 Source2:        %{name}.service
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  autoconf, gd-devel, libpng-devel, bison, flex
-%{?!_without_pgsql:BuildRequires: postgresql-devel}
-%{?!_without_sqlite:BuildRequires: sqlite-devel}
+%if %{with pgsql}
+BuildRequires: postgresql-devel
+%endif
+%if %{with sqlite}
+BuildRequires: sqlite-devel
+%endif
 %if "0%{?dist}" == "0.el4"
 BuildRequires:  libpcap
 %else
@@ -76,11 +82,9 @@ install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/rc.d/init.d/
 %endif
 # install apache configuration
 install -d $RPM_BUILD_ROOT%{_sysconfdir}/httpd/conf.d
-echo "Alias /%{name} %{_var}/www/%{name}/htdocs" \
-  > $RPM_BUILD_ROOT%{_sysconfdir}/httpd/conf.d/%{name}.conf
-# remove execute bit for gif and sh script without #!
-chmod -x phphtdocs/*
-
+install -m 0644 -T httpd.conf $RPM_BUILD_ROOT%{_sysconfdir}/httpd/conf.d/%{name}.conf
+install -m 0755 -d $RPM_BUILD_ROOT%{_datarootdir}/%{name}
+install -m 0644 -t $RPM_BUILD_ROOT%{_datarootdir}/%{name} phphtdocs/*.* phphtdocs/.htaccess
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -97,8 +101,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc README CHANGELOG TODO
-%{?!_without_pgsql:%doc phphtdocs}
+%doc README CHANGELOG TODO schema.postgresql
 %config(noreplace) %{_sysconfdir}/%{name}.conf
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}.conf
 %if 0%{?fedora} || 0%{?rhel} > 6
@@ -109,7 +112,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_sbindir}/%{name}
 %dir %{_var}/www/%{name}
 %{_var}/www/%{name}/*
-
+%{_datarootdir}/%{name}
 
 %changelog
 * Thu Jul 28 2016 Davide Principi <davide.principi@nethesis.it> - 2.0.1-32

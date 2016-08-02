@@ -23,7 +23,7 @@ if (isset($_GET['limit']) && $_GET['limit'] != "none")
 
 $db = ConnectDb();
 ?>
-<FORM name="navigation" method=get action=<?=$PHP_SELF?>>
+<FORM name="navigation" method="get">
 <table width=100% cellspacing=0 cellpadding=5 border=1>
 <tr>
 <td><SELECT name="sensor_name">
@@ -31,8 +31,8 @@ $db = ConnectDb();
 <OPTION value="none">--Select A Sensor--
 <?
 $sql = "SELECT sensor_name from sensors order by sensor_name;";
-$result = pg_query($sql);
-while ($r = pg_fetch_array($result))
+$result = $db->query($sql);
+while ($r = $result->fetch(PDO::FETCH_ASSOC))
     echo "<option value=\"".$r['sensor_name']."\" ".($sensor_name==$r['sensor_name']?"SELECTED":"").">".$r['sensor_name']."\n";
 ?>
 </SELECT>
@@ -81,8 +81,9 @@ else
 	echo "<h2>All Records - $sensor_name</h2>";
 
 // Sqlize the incomming variables
-if (isset($subnet))
-	$sql_subnet = "and ip <<= '$subnet'";
+if (isset($subnet)) {
+    $sql_subnet = prepare_sql_subnet($subnet);
+}
 
 // Sql Statement
 $sql = "select tx.ip, rx.scale as rxscale, tx.scale as txscale, tx.total+rx.total as total, tx.total as sent, 
@@ -97,7 +98,7 @@ from sensors, bd_tx_log
 where sensor_name = '$sensor_name'
 and sensors.sensor_id = bd_tx_log.sensor_id
 $sql_subnet
-and timestamp > $timestamp::abstime and timestamp < ".($timestamp+$interval)."::abstime
+and timestamp > $timestamp and timestamp < ".($timestamp+$interval)."
 group by ip) as tx,
 
 (SELECT ip, max(total/sample_duration)*8 as scale, sum(total) as total, sum(tcp) as tcp, sum(udp) as udp, sum(icmp) as icmp,
@@ -106,19 +107,19 @@ from sensors, bd_rx_log
 where sensor_name = '$sensor_name'
 and sensors.sensor_id = bd_rx_log.sensor_id
 $sql_subnet
-and timestamp > $timestamp::abstime and timestamp < ".($timestamp+$interval)."::abstime
+and timestamp > $timestamp and timestamp < ".($timestamp+$interval)."
 group by ip) as rx
 
 where tx.ip = rx.ip
 order by total desc;";
 
-//echo "</center><pre>$sql</pre><center>"; exit(0);
-pg_query("SET sort_mem TO 30000;");
-$result = pg_query($sql);
-pg_query("set sort_mem to default;");
-
+//echo "</center><pre>$sql</pre><center>"; error_log($sql);
+$pdoResult = $db->query($sql);
+$result = $pdoResult->fetchAll();
+$db = NULL;
+$num_rows = count($result);
 if ($limit == "all")
-	$limit = pg_num_rows($result);
+	$limit = $num_rows;
 
 echo "<table width=100% border=1 cellspacing=0><tr><td>Ip<td>Name<td>Total<td>Sent<td>Received<td>tcp<td>udp<td>icmp<td>http<td>p2p<td>ftp";
 
@@ -129,9 +130,9 @@ if (!isset($subnet)) // Set this now for total graphs
 echo "<TR><TD><a href=Total>Total</a><TD>$subnet";
 foreach (array("total", "sent", "received", "tcp", "udp", "icmp", "http", "p2p", "ftp") as $key)
 	{
-	for($Counter=0, $Total = 0; $Counter < pg_num_rows($result); $Counter++)
+	for($Counter=0, $Total = 0; $Counter < $num_rows; $Counter++)
 		{
-		$r = pg_fetch_array($result, $Counter);
+		$r = $result[$Counter];
 		$Total += $r[$key];
 		}
 	echo fmtb($Total);
@@ -139,9 +140,10 @@ foreach (array("total", "sent", "received", "tcp", "udp", "icmp", "http", "p2p",
 echo "\n";
 
 // Output Other Lines
-for($Counter=0; $Counter < pg_num_rows($result) && $Counter < $limit; $Counter++)
+for($Counter=0; $Counter < $num_rows && $Counter < $limit; $Counter++)
 	{
-	$r = pg_fetch_array($result, $Counter);
+	$r = $result[$Counter];
+	$r['ip'] = long2ip($r['ip']);
 	echo "<tr><td><a href=#".$r['ip'].">";
 	echo $r['ip']."<td>".gethostbyaddr($r['ip']);
 	echo "</a>";
@@ -152,9 +154,9 @@ for($Counter=0; $Counter < pg_num_rows($result) && $Counter < $limit; $Counter++
 echo "</table></center>";
 
 // Output Total Graph
-for($Counter=0, $Total = 0; $Counter < pg_num_rows($result); $Counter++)
+for($Counter=0, $Total = 0; $Counter < $num_rows; $Counter++)
 	{
-	$r = pg_fetch_array($result, $Counter);
+	$r = $result[$Counter];
 	$scale = max($r['txscale'], $scale);
 	$scale = max($r['rxscale'], $scale);
 	}
@@ -177,9 +179,10 @@ echo "<img src=legend.gif><br>\n";
 
 
 // Output Other Graphs
-for($Counter=0; $Counter < pg_num_rows($result) && $Counter < $limit; $Counter++) 
+for($Counter=0; $Counter < $num_rows && $Counter < $limit; $Counter++)
 	{
-	$r = pg_fetch_array($result, $Counter);
+	$r = $result[$Counter];
+	$r['ip'] = long2ip($r['ip']);
 	echo "<a name=".$r['ip']."><h3><a href=details.php?sensor_name=$sensor_name&ip=".$r['ip'].">";
 	if ($r['ip'] == "0.0.0.0")
 		echo "Total - Total of all subnets</h3>";

@@ -112,15 +112,16 @@ $a_ftp = array();
 $a_http = array();
 $a_p2p = array();
 
-$sql = "select *, extract(epoch from timestamp) as ts from sensors, $table where sensors.sensor_id = ".$table.".sensor_id and ip <<= '$ip' and sensor_name = '$sensor_name' and timestamp > $timestamp::abstime and timestamp < ".($timestamp+$interval)."::abstime order by ip;";
-//echo $sql."<br>"; exit(1);
-$result = pg_query($sql);
+$sql_subnet = prepare_sql_subnet($ip);
+$sql = "select *, timestamp as ts from sensors, $table where sensors.sensor_id = ".$table.".sensor_id $sql_subnet and sensor_name = '$sensor_name' and timestamp > $timestamp and timestamp < ".($timestamp+$interval)." order by ip;";
+//error_log($sql);
+$result = $db->query($sql);
 
 // The SQL statement pulls the data out of the database ordered by IP address, that way we can average each
 // datapoint for each IP address to provide smoothing and then toss the smoothed value into the accumulator
 // to provide accurate total traffic rate.
 
-while ($row = pg_fetch_array($result))
+while ($row = $result->fetch())
 	{
 	if ($row['ip'] != $last_ip)
 		{
@@ -161,7 +162,7 @@ $p2p = $a_p2p;
 $YMax += $YMax*0.05;    // Add an extra 5%
 
 // if a y scale was specified override YMax
-if (isset($yscale))
+if (isset($yscale) && $yscale > 0)
     $YMax = $yscale/8;
 
 // Plot the data

@@ -38,6 +38,8 @@ else
 	$txtable = "bd_tx_log";
 	}
 
+$sql_subnet = prepare_sql_subnet($ip);
+
 $sql = "select rx.scale as rxscale, tx.scale as txscale, tx.total+rx.total as total, tx.total as sent,
 rx.total as received, tx.tcp+rx.tcp as tcp, tx.udp+rx.udp as udp,
 tx.icmp+rx.icmp as icmp, tx.http+rx.http as http,
@@ -49,7 +51,7 @@ sum(http) as http, sum(p2p) as p2p, sum(ftp) as ftp
 from sensors, $txtable
 where sensor_name = '$sensor_name'
 and sensors.sensor_id = ".$txtable.".sensor_id
-and ip <<= '$ip'
+$sql_subnet
 group by ip) as tx,
                                                                                                                              
 (SELECT ip, max(total/sample_duration)*8 as scale, sum(total) as total, sum(tcp) as tcp, sum(udp) as udp, sum(icmp) as icmp,
@@ -57,14 +59,16 @@ sum(http) as http, sum(p2p) as p2p, sum(ftp) as ftp
 from sensors, $rxtable
 where sensor_name = '$sensor_name'
 and sensors.sensor_id = ".$rxtable.".sensor_id
-and ip <<= '$ip'
+$sql_subnet
 group by ip) as rx
                                                                                                                              
 where tx.ip = rx.ip;";
-//echo "</center><pre>$sql</pre><center>";exit(0);
-$result = pg_query($sql);
+//error_log($sql); printf('</center><tt>%s</tt><center>', $sql);
+$db = ConnectDb();
+$result = $db->query($sql);
 echo "<table width=100% border=1 cellspacing=0><tr><td>Ip<td>Name<td>Total<td>Sent<td>Received<td>tcp<td>udp<td>icmp<td>http<td>p2p<td>ftp";
-$r = pg_fetch_array($result);
+$r = $result->fetch();
+$db = NULL;
 echo "<tr><td>";
 if (strpos($ip, "/") === FALSE)
 	echo "$ip<td>".gethostbyaddr($ip);
