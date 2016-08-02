@@ -24,18 +24,9 @@ if (isset($_GET['limit']) && $_GET['limit'] != "none")
 $db = ConnectDb();
 ?>
 <FORM name="navigation" method="get">
+<input type='hidden' name="sensor_name" value="unset"/>
 <table width=100% cellspacing=0 cellpadding=5 border=1>
 <tr>
-<td><SELECT name="sensor_name">
-
-<OPTION value="none">--Select A Sensor--
-<?
-$sql = "SELECT sensor_name from sensors order by sensor_name;";
-$result = $db->query($sql);
-while ($r = $result->fetch(PDO::FETCH_ASSOC))
-    echo "<option value=\"".$r['sensor_name']."\" ".($sensor_name==$r['sensor_name']?"SELECTED":"").">".$r['sensor_name']."\n";
-?>
-</SELECT>
 <td><SELECT name="interval">
 <OPTION value="none">--Select An Interval--
 <OPTION value=<?=INT_DAILY?> <?=$interval==INT_DAILY?"SELECTED":""?>>Daily
@@ -76,9 +67,9 @@ if (!isset($sensor_name))
 // Print Title
 
 if (isset($limit))
-	echo "<h2>Top $limit - $sensor_name</h2>";
+	echo "<h2>Top $limit</h2>";
 else
-	echo "<h2>All Records - $sensor_name</h2>";
+	echo "<h2>All Records</h2>";
 
 // Sqlize the incomming variables
 if (isset($subnet)) {

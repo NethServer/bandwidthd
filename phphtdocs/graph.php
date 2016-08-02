@@ -220,18 +220,25 @@ for($Counter=XOFFSET+1; $Counter < $width; $Counter++)
 
 // Margin Text
 if ($SentPeak < 1024/8)
-	$txtPeakSendRate = sprintf("Peak Send Rate: %.1f KBits/sec", $SentPeak*8);
+	$txtPeakSendRate = sprintf("Peak Rate: %.1f KBits/sec", $SentPeak*8);
 else if ($SentPeak < (1024*1024)/8)
-    $txtPeakSendRate = sprintf("Peak Send Rate: %.1f MBits/sec", ($SentPeak*8.0)/1024.0);
+    $txtPeakSendRate = sprintf("Peak Rate: %.1f MBits/sec", ($SentPeak*8.0)/1024.0);
 else 
-	$txtPeakSendRate = sprintf("Peak Send Rate: %.1f GBits/sec", ($SentPeak*8.0)/(1024.0*1024.0));
+	$txtPeakSendRate = sprintf("Peak Rate: %.1f GBits/sec", ($SentPeak*8.0)/(1024.0*1024.0));
+
+$label = 'Data';
+if (strpos($table, 'tx') !== false) {
+    $label = 'Sent';
+} else if (strpos($table, 'rx') !== false) {
+    $label = 'Received';
+}
                                                                                                                              
 if ($TotalSent < 1024)
-	$txtTotalSent = sprintf("Sent %.1f KBytes", $TotalSent);
+	$txtTotalSent = sprintf("%s %.1f KBytes", $label, $TotalSent);
 else if ($TotalSent < 1024*1024)
-	$txtTotalSent = sprintf("Sent %.1f MBytes", $TotalSent/1024.0);
+	$txtTotalSent = sprintf("%s %.1f MBytes", $label, $TotalSent/1024.0);
 else 
-	$txtTotalSent = sprintf("Sent %.1f GBytes", $TotalSent/(1024.0*1024.0));
+	$txtTotalSent = sprintf("%s %.1f GBytes", $label, $TotalSent/(1024.0*1024.0));
                                                                                                                              
 ImageString($im, 2, XOFFSET+5,  $height-20, $txtTotalSent, $black);
 ImageString($im, 2, $width/2+XOFFSET/2,  $height-20, $txtPeakSendRate, $black);
