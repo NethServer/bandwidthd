@@ -29,6 +29,10 @@ if (isset($_GET['limit']) && $_GET['limit'] != "none")
 	$limit = $_GET['limit'];
 
 
+$tmp = explode(':',$db_connect_string);
+if ($tmp[0] == 'sqlite' && ! file_exists($tmp[1])) {
+   die("Data not available. Please wait a couple of minutes, then reload the page.");
+}
 $db = ConnectDb();
 ?>
 <FORM name="navigation" method="get">
