@@ -83,8 +83,10 @@ install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/rc.d/init.d/
 # install apache configuration
 install -d $RPM_BUILD_ROOT%{_sysconfdir}/httpd/conf.d
 install -m 0644 -T httpd.conf $RPM_BUILD_ROOT%{_sysconfdir}/httpd/conf.d/%{name}.conf
-install -m 0755 -d $RPM_BUILD_ROOT%{_datarootdir}/%{name}
-install -m 0644 -t $RPM_BUILD_ROOT%{_datarootdir}/%{name} phphtdocs/*.* phphtdocs/.htaccess
+install -m 0755 -d $RPM_BUILD_ROOT%{_datarootdir}/%{name}/{fonts,css}
+install -m 0644 -t $RPM_BUILD_ROOT%{_datarootdir}/%{name} phphtdocs/*.*
+install -m 0644 -t $RPM_BUILD_ROOT%{_datarootdir}/%{name}/css phphtdocs/css/*.*
+install -m 0644 -t $RPM_BUILD_ROOT%{_datarootdir}/%{name}/fonts phphtdocs/fonts/*.*
 
 %clean
 rm -rf $RPM_BUILD_ROOT
