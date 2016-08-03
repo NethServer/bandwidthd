@@ -1,7 +1,15 @@
+<!DOCTYPE html>
 <?include("include.php");?>
-<html>
-<center>
-<img src=logo.gif>
+<html lang=html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="css/bootstrap.min.css">
+<link rel="stylesheet" href="css/bootstrap-theme.min.css">
+</head>
+<body>
+<div class="container">
 <?
 // Get variables from url
 
@@ -25,10 +33,9 @@ $db = ConnectDb();
 ?>
 <FORM name="navigation" method="get">
 <input type='hidden' name="sensor_name" value="unset"/>
-<table width=100% cellspacing=0 cellpadding=5 border=1>
+<table class='table'>
 <tr>
-<td><SELECT name="interval">
-<OPTION value="none">--Select An Interval--
+<td>Select An Interval: <SELECT name="interval" class="form-control">
 <OPTION value=<?=INT_DAILY?> <?=$interval==INT_DAILY?"SELECTED":""?>>Daily
 <OPTION value=<?=INT_WEEKLY?> <?=$interval==INT_WEEKLY?"SELECTED":""?>>Weekly
 <OPTION value=<?=INT_MONTHLY?> <?=$interval==INT_MONTHLY?"SELECTED":""?>>Monthly
@@ -37,16 +44,16 @@ $db = ConnectDb();
 <OPTION value=<?=30*24*60*60?> <?=$interval==30*24*60*60?"SELECTED":""?>>30days
 </select>
 
-<td><SELECT name="limit">
-<OPTION value="none">--How Many Results--
+<td>How Many Results:<SELECT name="limit" class="form-control">
 <OPTION value=20 <?=$limit==20?"SELECTED":""?>>20
 <OPTION value=50 <?=$limit==50?"SELECTED":""?>>50
 <OPTION value=100 <?=$limit==100?"SELECTED":""?>>100
 <OPTION value=all <?=$limit=="all"?"SELECTED":""?>>All
 </select>
 
-<td>Subnet Filter:<input name=subnet value="<?=isset($subnet)?$subnet:"0.0.0.0/0"?>"> 
-<input type=submit value="Go">
+<td>Subnet Filter:<input name=subnet value="<?=isset($subnet)?$subnet:"0.0.0.0/0"?>" class="form-control"></td>
+<td style='vertical-align: bottom'><button type="submit" class="btn btn-default">Go</button></td>
+</tr>
 </table>
 </FORM>
 <?
@@ -104,7 +111,7 @@ group by ip) as rx
 where tx.ip = rx.ip
 order by total desc;";
 
-//echo "</center><pre>$sql</pre><center>"; error_log($sql);
+//echo "<pre>$sql</pre>" error_log($sql);
 $pdoResult = $db->query($sql);
 $result = $pdoResult->fetchAll();
 $db = NULL;
@@ -112,7 +119,7 @@ $num_rows = count($result);
 if ($limit == "all")
 	$limit = $num_rows;
 
-echo "<table width=100% border=1 cellspacing=0><tr><td>Ip<td>Name<td>Total<td>Sent<td>Received<td>tcp<td>udp<td>icmp<td>http<td>smtp<td>ftp";
+echo "<table class='table table-striped table-hover'><thead><tr><th>Ip<th>Name<th>Total<th>Sent<th>Received<th>tcp<th>udp<th>icmp<th>http<th>smtp<th>ftp</th></tr></thead><tbody>";
 
 if (!isset($subnet)) // Set this now for total graphs
 	$subnet = "0.0.0.0/0";
@@ -142,7 +149,7 @@ for($Counter=0; $Counter < $num_rows && $Counter < $limit; $Counter++)
 		fmtb($r['tcp']).fmtb($r['udp']).fmtb($r['icmp']).fmtb($r['http']).
 		fmtb($r['p2p']).fmtb($r['ftp'])."\n";
 	}
-echo "</table></center>";
+echo "</tbody></table>";
 
 // Output Total Graph
 for($Counter=0, $Total = 0; $Counter < $num_rows; $Counter++)
