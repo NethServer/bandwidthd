@@ -45,7 +45,7 @@ function fmtb($kbytes)
 		$Suffix = 'T';
 		}
 
-	return(sprintf("<td><tt>%.1f%s</td>", $Output, $Suffix));
+	return(sprintf("<td>%.1f%s</td>", $Output, $Suffix));
 	}
 
 function ip2s32($ip) {

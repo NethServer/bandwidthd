@@ -74,7 +74,7 @@ where tx.ip = rx.ip;";
 //error_log($sql); printf('<tt>%s</tt>', $sql);
 $db = ConnectDb();
 $result = $db->query($sql);
-echo "<table class='table table-striped table-hover'><thead><tr><th>Ip<th>Name<th>Total<th>Sent<th>Received<th>tcp<th>udp<th>icmp<th>http<th>p2p<th>ftp</th></tr></thead><tbody>";
+echo "<table class='table table-striped table-hover'><thead><tr><th>Ip<th>Name<th>Total<th>Sent<th>Received<th>tcp<th>udp<th>icmp<th>http<th>smtp<th>ftp</th></tr></thead><tbody>";
 $r = $result->fetch();
 $db = NULL;
 echo "<tr class='table-striped'><td>";

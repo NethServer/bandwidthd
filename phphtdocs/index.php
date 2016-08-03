@@ -13,8 +13,11 @@
 <?
 // Get variables from url
 
-if (isset($_GET['sensor_name']) && $_GET['sensor_name'] != "none")
+if (isset($_GET['sensor_name']) && $_GET['sensor_name'] != "none") {
     $sensor_name = $_GET['sensor_name'];
+} else {
+    $sensor_name = 'unset';
+}
 
 if (isset($_GET['interval']) && $_GET['interval'] != "none")
     $interval = $_GET['interval'];
@@ -115,7 +118,7 @@ group by ip) as rx
 where tx.ip = rx.ip
 order by total desc;";
 
-//echo "<pre>$sql</pre>" error_log($sql);
+//echo "<pre>$sql</pre>";
 $pdoResult = $db->query($sql);
 $result = $pdoResult->fetchAll();
 $db = NULL;
@@ -129,7 +132,7 @@ if (!isset($subnet)) // Set this now for total graphs
 	$subnet = "0.0.0.0/0";
 
 // Output Total Line
-echo "<TR><TD><a href=Total>Total</a><TD>$subnet";
+echo "<TR><TD><a href='#Total'>Total</a><TD>$subnet";
 foreach (array("total", "sent", "received", "tcp", "udp", "icmp", "http", "p2p", "ftp") as $key)
 	{
 	for($Counter=0, $Total = 0; $Counter < $num_rows; $Counter++)
