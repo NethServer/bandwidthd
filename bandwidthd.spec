@@ -5,7 +5,7 @@
 
 Name:           bandwidthd
 Version:        2.0.1
-Release:        34%{?dist}
+Release:        35%{?dist}
 Summary:        Tracks network usage and builds html and graphs
 
 Group:          System Environment/Daemons
@@ -117,6 +117,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datarootdir}/%{name}
 
 %changelog
+* Tue Jan 10 2017 Davide Principi <davide.principi@nethesis.it> - 2.0.1-35
+- Rebuild for CentOS 7.3.1611
+
 * Fri Aug 05 2016 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 2.0.1-34
 - Cosmetic enhancements for PHP scripts
 - Replace P2P protocol with SMTP
